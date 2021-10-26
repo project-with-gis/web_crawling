@@ -21,6 +21,7 @@ for s in s_link:
 
 # s_link = str(df['s_link'])
 store_name = df['store_name'].to_list()
+print(store_name)
 base_url = 'https://www.siksinhot.com/P/'
 
 index_role = 0
@@ -32,55 +33,70 @@ store_review_onelist=[] #리뷰 한 행이 될 리스트
 # 최종 리뷰 csv가 될 df 생성
 total_df = pd.DataFrame(index=range(0,1),columns=["store_id","portal_id", "date","score", "review"])
 
-i = 0
+
 for a in range(len(store_name)):
-    url = base_url + s_link_list[i]
-    i += 1
+    url = base_url + s_link_list[a]
     print(url)
+    print(a)
     driver = webdriver.Chrome('C:/Users/alti1/PycharmProjects/pythonProject/chromedriver.exe', options=chrome_options)
     driver.get(url)
     body = driver.find_element_by_tag_name("body")
-
+contents = []
+stars = []
     while True:
         try:
             body.send_keys(Keys.PAGE_DOWN)
             time.sleep(1)
             driver.find_element_by_xpath("//*[@id='siksin_review']/div[3]/a/span").click()
 
+            html = driver.page_source
+            soup = BeautifulSoup(html, "html.parser")
+            body = soup.find("body")
+
+            contents = body.select("#siksin_review > div.rList > ul > li > div > div.cnt > div.score_story > p")
+            contents = [content.text for content in contents]
+            contents.append(contents)
+            print(len(contents))
+
+            stars = body.select("div.score_story > div > span > strong")
+            stars = [star.text for star in stars]
+            stars
+
         except:
             break
 
-    html = driver.page_source
-    soup = BeautifulSoup(html, "html.parser")
-    body = soup.find("body")
+    # html = driver.page_source
+    # soup = BeautifulSoup(html, "html.parser")
+    # body = soup.find("body")
+    #
+    # contents = body.select("#siksin_review > div.rList > ul > li > div > div.cnt > div.score_story > p")
+    # contents = [content.text for content in contents]
+    # print(len(contents))
+    #
+    # stars = body.select("div.score_story > div > span > strong")
+    # stars = [star.text for star in stars]
 
-    contents = body.select("#siksin_review > div.rList > ul > li > div > div.cnt > div.score_story > p")
-    contents = [content.text for content in contents]
-
-    stars = body.select("div.score_story > div > span > strong")
-    stars = [star.text for star in stars]
-
-    df1 = pd.DataFrame({"store_id": index_role, "portal_id": 1002, "score": stars, "review": contents})
+    df1 = pd.DataFrame({"store_id": a, "portal_id": 1004, "score": stars, "review": contents})
     total_df = pd.concat([total_df, df1])
 
     total_df.to_csv("test1.csv", encoding='utf-8')
+#
 
-
-num = []
-reviews = []
-score = []
-
-for i in range(len(contents)):
-  num.append( i + 1 )
-  reviews.append( contents[i])
-  score.append( stars[i])
-
-info = {'num':num, 'store_name':store_name, 'review':reviews}
-df = pd.DataFrame(info)
-df.set_index('num', inplace=True)
-print(df.head())
-
-df.to_csv('reviews.csv', encoding='utf-8')
+# num = []
+# reviews = []
+# score = []
+#
+# for i in range(len(contents)):
+#   num.append( i + 1 )
+#   reviews.append( contents[i])
+#   score.append( stars[i])
+#
+# info = {'num':num, 'store_name':store_name, 'review':reviews}
+# df = pd.DataFrame(info)
+# # df.set_index('num', inplace=True)
+# print(df.head())
+#
+# df.to_csv('reviews.csv', encoding='utf-8')
 
 
 
