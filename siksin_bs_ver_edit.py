@@ -11,7 +11,7 @@ chrome_options.add_argument('--headless')  # 내부 창을 안 띄우게 설정
 # chrome_options.add_argument('--no-sandbox')
 # chrome_options.add_argument('--disable-dev-shm-usage')
 
-read = pd.read_csv('store_info.csv')
+read = pd.read_csv('storeInfo_2.csv')
 df = pd.DataFrame(read)
 
 s_link_list=[]
