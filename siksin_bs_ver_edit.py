@@ -67,7 +67,7 @@ for a in range(len(store_name)):
     stars = body.select("div.score_story > div > span > strong")
     stars = [star.text for star in stars]
 
-    df1 = pd.DataFrame({"num": i, "store_id": store_id_list[i] , "portal_id": 1004, "score": stars, "review": contents})
+    df1 = pd.DataFrame({"store_id": store_id_list[i] , "portal_id": 1004, "score": stars, "review": contents})
     total_df = pd.concat([total_df, df1])
 
     i += 1
