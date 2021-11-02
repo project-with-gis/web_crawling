@@ -27,7 +27,7 @@ def concat_review_csv(input_path):
 
 def concat_review_df(df1, *args):
     totaldf = pd.concat([df1, *args])
-    totaldf.to_csv('./data/total_revies.csv', header=True, index=False)
+    totaldf.to_csv('./data/total_reviews.csv', header=True, index=False)
 
 if __name__=='__main__':
      # df = read_csv('data/storeInfo_2.csv')
